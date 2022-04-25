@@ -1,0 +1,61 @@
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 3000
+##GET vechile/_search
+#PUT /vechile/_doc/12345678
+#{
+#  "name":"q3",
+#  "brand":"audi"
+#}
+#GET vechile/_doc/12345678
+
+#DELETE /vechile/
+
+#using the bulk request using the _bulk api
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 3000
+#POST _bulk
+#{"index": { "_index": "blogpost","_type": "_doc", "_id" : 1}}
+#{
+#  "title":"django blof post",
+#  "author":"pratik"
+#}
+#{"index": { "_index": "blogpost","_type": "_doc", "_id" : 2}}
+#{
+#  "title":"flask blog post",
+#  "author":"rika"
+#}
+#{"index": { "_index": "blogpost","_type": "_doc" , "_id" : 3}}
+#{
+#  "title":"Mongodb blog post",
+#  "author":"abi"
+#}
+#{"delete":{"_index": "blogpost", "_id":1}}
+
+#fetching the details as
+#GET /blogpost/_doc/2
+
+
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+POST _bulk
+{"index": { "_index": "newblogpost","_type": "_doc", "_id" : 1}}
+{
+  "title":"django blof post",
+  "author":"pratik"
+}
+{"index": { "_index": "newblogpost","_type": "_doc", "_id" : 2}}
+{
+  "title":"flask blog post",
+  "author":"rika"
+}
+{"index": { "_index": "newblogpost","_type": "_doc" , "_id" : 3}}
+{
+  "title":"Mongodb blog post",
+  "author":"abi"
+}
+{"delete":{"_index": "newblogpost","_type":"_doc" , "_id":1}}
+
+
+
+
+

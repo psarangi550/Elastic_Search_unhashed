@@ -1,0 +1,49 @@
+#GET vechile/_search
+
+#indexing a document in elastic search cluster
+PUT /vechile/_doc/1
+{
+  "title":"python blog post",
+  "brand":"Abismruta"
+}
+
+#fetching the result using the GET request
+GET vechile/_doc/12345678
+#fetching the status using the HEAD request which will return the response code based on document present or not
+HEAD vechile/_doc/12345678
+#here the index API will create _id field directly
+POST /vechile/_doc
+{
+  "name":"wagenr",
+  "brand":"Hundai"
+}
+
+
+#using the bulk api in elastic search for index and delete
+
+POST _bulk
+{"index": { "_index": "vechile", "_id" : 1}}
+{"title":"django blog post","author":"pratik"}
+{"index": { "_index": "vechile", "_id" : 2}}
+{"title":"flask blog post","author":"rika"}
+{"index": { "_index": "vechile", "_id" : 3}}
+{"title":"Mongodb blog post","author":"abi"}
+{"delete":{"_index": "vechile", "_id":1}}
+
+#using the bulk api in elasticsearch for update operation
+
+POST _bulk
+{"update":{"_index":"vechile", "_id":2}}
+{"doc":{"title":"fastapi blog post"}}
+
+#using the bulk api in elasticsearch for index and update operation
+
+POST _bulk
+{"index":{"_index":"vechile","_id":1}}
+{"title":"javascript blog post","author":"gundu"}
+{"update":{"_index":"vechile", "_id":3}}
+{"doc":{"title":"elastic blog post"}}
+
+#fetching the documents from the index
+
+GET /vechile/_doc/_search
