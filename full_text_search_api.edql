@@ -11,3 +11,123 @@ POST my-index/_search
     }
   }
 }
+
+
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 0
+#removing the older blogpost index
+#DELETE /blogpost
+
+#inserting in bulk wise
+
+#POST _bulk
+#{"index":{"_index":"blogpost", "_id": 1}}
+#{"title":"learn Apache Air Flow", "author" : "pratik", "post_date" : "1993-08-16" , "status":"published"}
+#{"index":{"_index":"blogpost", "_id": 2}}
+#{"title":"learn Apache Kafka everyday", "author" : "rika", "post_date" : "1997-03-16" , "status":"published"}
+#{"index":{"_index":"blogpost", "_id": 3}}
+#{"title":"learn Apache cassandra ", "author" : "Naju", "post_date" : "1998-04-25" , "status":"draft"}
+#{"index":{"_index":"blogpost", "_id": 4}}
+#{"title":"learn Apache Air Flow", "author" : "Rohith", "post_date" : "1993-09-02" , "status":"published"}
+#{"index":{"_index":"blogpost", "_id": 5}}
+#{"title":"learn Grafana ", "author" : "Abismruta", "post_date" : "1997-03-16" , "status":"draft"}
+#{"index":{"_index":"blogpost", "_id": 6}}
+#{"title":"learn Influx DB", "author" : "priya", "post_date" : "1999-05-17" , "status":"published"}
+
+
+#now fetching the status of the document using the head request as
+#GET /blogpost/_search?timeout=80s
+
+#if we are using the request body search API then we can use as below
+
+#GET /blogpost/_search
+#  {
+#      "query": {
+#          "match_all": {}
+#      }
+#  }
+
+
+
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 300
+#GET /blogpost/_search
+#{
+#  "query": {
+#    "match": {
+#      "title":"kafka"
+#    },
+#  },
+#}
+
+#if we want for the searchterm to match with multiple field we need to use multimatch search query as below
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 300
+#GET /blogpost/_search
+#{
+#  "query": {
+#
+#    "multi_match": {
+#      "query": "kafka",
+#      "fields": ["title","author"]
+#    }
+#
+#  }
+#}
+
+#using the match_phrase where the search token is "Apache Air Flow"
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 300
+#GET /blogpost/_search?timeout=100s
+#{
+#  "query": {
+#    "match_phrase":{
+#      "title":"Apache Air Flow"
+#    }
+#  }
+#}
+
+#HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+#Timeout 300
+#GET /blogpost/_search
+#{
+#  "query":{
+#    "bool": {
+#      "must": {
+#        "match_phrase":
+#        {
+#          "title":"Apache Air Flow"
+#        }
+#      },
+#      "must_not": {
+#        "match": {
+#          "author":"pratik"
+#        }
+#      }
+#    }
+#  }
+#}
+
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 300
+GET /blogpost/_search
+{
+"query": {
+"bool": {
+"must": [
+{
+"match_phrase":
+{
+"title": "Apache Air Flow"
+}
+},
+{
+"match": {
+"author": "pratik"
+}
+}
+]
+}
+}
+}
+
