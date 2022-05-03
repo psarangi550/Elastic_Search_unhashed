@@ -1,0 +1,56 @@
+{
+  "blogpost": {
+    "aliases": {},
+    "mappings": {
+      "properties": {
+        "author": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "no_of_like": {
+          "type": "long"
+        },
+        "post_date": {
+          "type": "date"
+        },
+        "status": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "title": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "settings": {
+      "index": {
+        "number_of_shards": "1",
+        "auto_expand_replicas": null,
+        "provided_name": "blogpost",
+        "creation_date": "1650955113184",
+        "priority": "0",
+        "number_of_replicas": "1",
+        "uuid": "7kyj38MvQ7GiVjQbJt5JTg",
+        "version": {
+          "created": "7100299"
+        }
+      }
+    }
+  }
+}

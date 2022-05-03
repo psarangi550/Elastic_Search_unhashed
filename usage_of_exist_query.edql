@@ -1,0 +1,23 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#getting all the document in the index
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{}
+  }
+}
+
+
+
+GET /blogposts/_search
+{
+  "query": {
+      "exists":{
+        "field":"published_date"
+      }
+  }
+}

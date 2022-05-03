@@ -1,0 +1,84 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#using the boost with the should query
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "should":[
+      {
+        "match":{
+          "title":{
+            "query":"react",
+            "boost":1
+          }
+        }
+      },
+        {
+          "match":{
+            "content":{
+              "query":"elasticsearch",
+              "boost":2
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+#using the boost with the should query
+#using the minimum_should_match
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "should":[
+        {
+          "match":{
+            "title":{
+              "query":"elasticsearch",
+              "boost":1
+            }
+          }
+        },
+        {
+          "match":{
+            "content":{
+              "query":"elasticsearch",
+              "boost":2
+            }
+          }
+        }
+      ],
+      "minimum_should_match":2
+    }
+  }
+}
+
+#using the boost with the multi_match query
+#here the boost will be applied to both the fields
+GET /blogposts/_search
+{
+  "query":{
+    "multi_match":{
+      "query":"elasticsearch",
+      "fields":["title","content"],
+      "boost": 2
+    }
+  }
+}
+
+#using the boost for the single query then
+GET /blogposts/_search
+{
+  "query":{
+    "multi_match":{
+      "query": "elasticsearch",
+      "fields":["tags^1","content^2"]
+    }
+  }
+}

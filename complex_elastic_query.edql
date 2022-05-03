@@ -1,0 +1,126 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "must": [
+      {
+        "multi_match":{
+          "query":"elasticsearch",
+          "fields":["title"]
+        }
+      },
+      {
+        "range":{
+          "no_of_likes":{
+            "gte":100
+          }
+        }
+      },
+        {
+          "range":{
+            "published_date":{
+              "gte":"2019-11-20"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "status": "draft"
+        }
+      }
+      ],
+      "should": [
+      {
+        "multi_match":{
+          "query":"react",
+          "fields":["title"]
+
+        }
+      }
+      ]
+    }
+  }
+}
+
+#alternate way first validating then writing the search query
+GET /blogposts/_validate/query
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "must": [
+      {
+        "match":{
+          "title":"elasticsearch"
+        }
+      }
+      ],
+      "must_not":[
+      {
+        "term":{
+          "status": "draft"
+        }
+      }
+      ],
+      "filter": [
+      {
+        "range":{
+          "no_of_likes":{
+            "gte":100
+          }
+        }
+      },
+        {
+          "range":{
+            "published_date" :{
+              "gte":"2019-11-20"
+            }
+          }
+        }
+      ],
+      "should":[
+      {
+        "match":{
+          "title":{
+            "query":"react"
+          }
+        }
+      }
+      ],
+      "minimum_should_match":"0%"
+    }
+  }
+}
+
+
+
+GET /blogposts/_search
+{
+  "query":{
+    "bool": {
+      "should":[
+      {
+        "match":{
+          "title":{
+            "query":"elasticsearch"
+          }
+        }
+      },
+        {
+          "term":
+          {
+            "title": "react"
+          }
+      }
+      ],
+      "minimum_should_match":"50%"
+    }
+  }
+}

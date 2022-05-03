@@ -1,0 +1,22 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#highlight query must be used outside the query
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase_prefix":{
+      "title":{
+            "query":"introduction elast",
+            "slop":2
+          }
+    }
+  },
+  "highlight":{
+    "fields":{
+      "title":{}
+    }
+  }
+}

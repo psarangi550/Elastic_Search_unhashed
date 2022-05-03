@@ -1,0 +1,24 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#for validating the query the point being
+#GET /blogposts/_validate/query
+#for checking if there is any problem or not then we can use as
+GET /blogposts/_validate/query?explain
+#for serching we have to use _search end point
+#GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "filter":[
+      {
+        "term":{
+          "title":"elasticsearch"
+          }
+      }
+      ]
+    }
+  }
+}

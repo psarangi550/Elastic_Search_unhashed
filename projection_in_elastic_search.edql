@@ -1,0 +1,57 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#displaying the required fields
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{},
+  },
+  "_source":["title","content"]
+}
+#displaying the required fields with wildcards regular expression
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{},
+  },
+  "_source":["tit*","*ent"]
+}
+
+
+
+#including the required fields
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{},
+  },
+  "_source":{
+    "include":["title","content"]
+  }
+}
+
+#excluding the required fields
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{},
+  },
+  "_source":{
+    "exclude":["content"]
+  }
+}
+
+
+#excluding the required fields
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{},
+  },
+  "_source":{
+    "exclude":"content"
+  }
+}

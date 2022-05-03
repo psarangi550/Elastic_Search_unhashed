@@ -1,0 +1,95 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#using the term in the query for searching
+GET /blogposts/_search
+{
+  "query": {
+    "term":{
+      "tags":"elasticsearch"
+    }
+  }
+}
+
+
+
+#alternate way
+#using the term attributes in the filter query
+GET /blogposts/_search
+{
+  "query": {
+    "bool":{
+      "filter":[
+        {
+          "term":{
+            "tags":"elasticsearch"
+          }
+        }
+      ]
+    }
+  }
+}
+
+#using the terms attributes in the filter query
+GET /blogposts/_search
+{
+  "query": {
+    "bool":{
+      "filter":[
+      {
+        "terms":{
+                "tags":["elasticsearch","react"]
+        }
+      }
+      ]
+    }
+  }
+}
+
+#alternate way of using the terms in the query documents
+GET /blogposts/_search
+{
+  "query": {
+    "terms":{
+      "tags":["elasticsearch","java"]
+    }
+  }
+}
+
+
+#we can use the term as below as well
+
+GET /blogposts/_search
+{
+  "query":{
+    "term":{
+      "status":{
+        "value":"published"
+      }
+    }
+  }
+}
+
+#but terms can't eb used as
+GET /blogposts/_search
+{
+  "query":{
+    "terms":{
+      "status":{
+        "values":["published","draft"]
+      }
+    }
+  }
+}
+
+#we need to use below way
+GET /blogposts/_search
+{
+  "query":{
+    "terms":{
+      "status":["published","draft"]
+    }
+  }
+}

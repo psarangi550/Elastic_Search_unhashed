@@ -1,0 +1,44 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+POST /_analyze
+{
+  "analyzer":"simple",
+  "text":"This is an issue"
+}
+
+POST /_analyze
+{
+  "tokenizer":"ngram",
+  "text":"search"
+}
+
+DELETE /tokenindex
+
+PUT /tokenindex
+{
+  "settings":{
+    "analysis":{
+      "analyzer":{
+        "my_token_analyzer":{
+          "tokenizer":"custom_tokenizer"
+        }
+      },
+      "tokenizer":{
+        "custom_tokenizer":{
+          "type":"ngram",
+          "min_gram":1,
+          "max_grams":3
+        }
+      }
+    }
+  }
+}
+
+POST tokenindex/_analyze
+{
+  "analyzer":"my_token_analyzer",
+  "text":"search"
+}

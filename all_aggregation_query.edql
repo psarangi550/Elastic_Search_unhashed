@@ -1,0 +1,395 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+#Authorization "Bear xxx"
+#Username "elastic"
+#Password "pratik123"
+
+#matching all the document in the index /blogposts
+
+GET /blogpost/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+#aggregations with query
+GET /blogposts/_search
+{
+  "query":{
+    "match": {
+      "title": "elasticsearch"
+    }
+  },
+  "aggregations":{
+    "top_no_of_like":{
+      "terms":{
+        "field": "tags.keyword",
+        "size":10
+      }
+    }
+
+  }
+}
+#how to use the stats
+GET /blogposts/_search
+{
+  "aggs": {
+    "all_state_aggs": {
+      "terms": {
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "all_stat_aggs": {
+          "stats": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+#getting the mappings of the index
+GET /blogposts/_mapping
+
+
+#using the extend_stats query
+GET /blogposts/_search
+{
+  "aggs": {
+    "all_group_by_status": {
+      "terms": {
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "all_like_stats": {
+          "extended_stats": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+
+#using the query contect with aggregation
+GET /blogposts/_search
+{
+  "query":{
+    "term": {
+      "status":"published"
+    }
+  },
+  "aggs": {
+    "top_tags": {
+      "terms": {
+        "field": "tags.keyword"
+      }
+    }
+  }
+}
+
+#alternate way
+
+GET /blogposts/_search
+{
+  "query":{
+    "term": {
+      "status":{
+        "value":"published"
+      }
+    }
+  },
+  "aggs": {
+    "top_tags": {
+      "terms": {
+        "field": "tags.keyword"
+      }
+    }
+  }
+}
+
+
+#using it in the filter
+GET /blogposts/_search
+{
+  "query":{
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "status": {
+              "value":"published"
+            }
+          }
+        }
+      ]
+
+    }
+  },
+  "aggs": {
+    "top_tag": {
+      "terms": {
+        "field": "tags.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+#using the query context with aggregation
+
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase": {
+      "title":{
+        "query": "introduction elasticsearch",
+        "slop": 2
+      }
+    }
+  },
+  "aggs": {
+    "top_tags": {
+      "terms": {
+        "field": "no_of_likes"
+      }
+    }
+  }
+}
+
+#using the aggregation field as single one
+
+GET /blogposts/_search
+{
+  "aggs": {
+    "title_fields_aggr": {
+      "terms": {
+        "field": "title.keyword",
+        "size": 40
+      }
+    }
+  }
+}
+
+#using the matrics with the aggregation bucket
+
+GET /blogposts/_search
+{
+  "aggs":{
+    "status_aggs":{
+      "terms":{
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "averge_no_of_like": {
+          "avg": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+
+#using the matrics with the aggregation bucket
+
+GET /blogposts/_search
+{
+  "aggs":{
+    "status_aggs":{
+      "terms":{
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "averge_no_of_like": {
+          "sum": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+
+#using the matrics with the aggregation bucket
+
+GET /blogposts/_search
+{
+  "aggs":{
+    "status_aggs":{
+      "terms":{
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "averge_no_of_like": {
+          "value_count": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+
+#using the filter context with aggregation
+
+GET /blogposts/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "no_of_likes": {
+              "gte": 100
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "top_tags": {
+      "terms": {
+        "field": "tags.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+#using the normal filter context with the aggregation
+
+GET /blogposts/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "status": {
+              "value": "published"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "no_of_likes": {
+              "gt": 100
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "top_tags": {
+      "terms": {
+        "field": "tags.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+
+#using the exist query condtion
+GET /blogposts/_search
+{
+  "query":{
+    "exists": {
+      "field": "published_date"
+    }
+  }
+}
+
+
+#using the post_filter query which will be execute after the query and independent of aggregation
+
+GET /blogposts/_search
+{
+  "query": {
+    "term": {
+      "status": {
+        "value": "published"
+      }
+    }
+  },
+  "post_filter": {
+    "range": {
+      "no_of_likes": {
+        "gte": 100
+      }
+    }
+  }
+}
+
+#this post_filter  will be applied after the query context
+
+
+#using the post_filter query which will be execute after the query and independent of aggregation
+
+
+GET /blogposts/_search
+{
+  "query": {
+    "term": {
+      "status": {
+        "value": "published"
+      }
+    }
+  },
+  "post_filter": {
+    "range": {
+      "no_of_likes": {
+        "gte": 100
+      }
+    }
+  },
+  "aggs": {
+    "all_status_aggrs": {
+      "terms": {
+        "field": "status.keyword"
+      }
+    }
+  }
+}
+
+#we can calulate the max no_of_like to determine it has no relation with post_filter
+
+GET /blogposts/_search
+{
+  "query": {
+    "term": {
+      "status": {
+        "value": "published"
+      }
+    }
+  },
+  "post_filter": {
+    "range": {
+      "no_of_likes": {
+        "gte": 100
+      }
+    }
+  },
+  "aggs": {
+    "all_status_aggrs": {
+      "terms": {
+        "field": "status.keyword"
+      },
+      "aggs": {
+        "max_no_of_like": {
+          "max": {
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}

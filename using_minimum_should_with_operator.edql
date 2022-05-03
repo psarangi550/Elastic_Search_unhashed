@@ -1,0 +1,58 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+#using the operator and
+#by default the operator is Or Operator
+
+#using the default or operator
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title":{
+        "query":"intoduction to elasticsearch",
+        "operator":"or"
+      }
+    }
+  }
+}
+#using the and operator with the query search
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title":{
+        "query":"intoduction to elasticsearch",
+        "operator":"and"
+      }
+    }
+  }
+}
+
+#using the analyzer with the and operator
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title":{
+        "query":"intoduction to elasticsearch",
+        "operator":"and",
+        "analyzer":"simple"
+      }
+    }
+  }
+}
+
+#using the minimum_should value as the token to match in the query as
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title":{
+        "query":"intoduction to elasticsearch",
+        "minimum_should_match":"50%"
+      }
+    }
+  }
+}

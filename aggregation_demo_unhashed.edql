@@ -1,0 +1,172 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+#Authorization "Bear xxx"
+Username "elastic"
+Password "pratik123"
+
+
+#fetching all the document accross all the index
+
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+#creating the index with no_of_shards and no_of_replicas
+
+PUT /blogpost
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}
+
+#inserting a document into the index
+
+PUT /blogpost/_doc/1
+{
+  "title": "Introduction to elasticsearch",
+  "content": "Elasticsearch is a distributed, open source search and analytics engine for all types of data",
+  "published_date": "2020-01-02",
+  "tags": [
+    "elasticsearch",
+    "distributed",
+    "storage"
+  ],
+  "no_of_likes": 21,
+  "status": "published"
+}
+
+
+#fetching all the document from the index
+
+GET /blogposts/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+#using the mapping to fetch the mapping setting
+GET /blogposts/_mapping
+
+
+#using the basic term aggregation with exact field
+
+GET /blogposts/_search
+{
+  "aggs": {
+    "top_tag": {
+      "terms": {
+        "field":"tags.keyword",
+        "size":20
+      }
+    }
+  }
+}
+
+
+#using the aggregation on not_analysed i.e exact field
+
+GET /blogposts/_search
+{
+  "aggs": {
+    "multi_field_aggregation": {
+      "terms": {
+        "field": "tags.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+#using the post_filter with aggregation
+
+GET /blogposts/_search
+{
+  "post_filter": {
+    "range": {
+      "no_of_likes": {
+        "gte": 100,
+        "lte": 200
+      }
+    }
+  },
+  "aggs": {
+    "multi_field_aggregation": {
+      "terms": {
+        "field": "status.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+
+GET /blogposts/_search
+{
+  "aggs": {
+    "multi_field_aggregation": {
+      "terms": {
+        "field": "status.keyword",
+        "size": 10
+      },
+      "aggs": {
+        "all_state_of_tags": {
+          "value_count": {
+            "field": "tags.keyword"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+#using multiple matrics for the buckets
+GET /blogposts/_search
+{
+  "aggs": {
+    "group_by_status": {
+      "terms": {
+        "field":"status.keyword"
+      },
+      "aggs": {
+        "count_of_tags_aggr": {
+          "value_count": {
+            "field": "tags.keyword"
+          }
+        },
+        "max_tag_aggr":{
+          "sum":{
+            "field": "no_of_likes"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /blogposts/_mapping
+
+#using the range bucket condition
+GET /blogposts/_search
+{
+  "aggs":{
+    "range_aggregation_for_no_of_like":{
+      "range":{
+        "field":"no_of_likes",
+        "ranges":{
+            "from":100,
+            "to":200
+        }
+      }
+    }
+  }
+}

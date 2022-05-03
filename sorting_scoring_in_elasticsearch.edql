@@ -1,0 +1,114 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#sorting according to the title
+#in case of only soring the score will be null
+GET /blogposts/_search
+{
+  "query": {
+      "match_all":{}
+  },
+  "sort":[
+  {
+    "title.keyword":{
+      "order": "desc"
+    }
+  }
+  ]
+}
+
+#using the _score inside sort
+GET /blogposts/_search
+{
+  "query": {
+    "match":{
+      "title":"elasticsearch"
+    }
+  },
+  "sort":[
+    {
+      "_score":{
+        "order":"desc"
+      }
+    }
+  ]
+}
+
+
+#using the score along with the sorting
+GET /blogposts/_search
+{
+  "query": {
+    "match":{
+      "title":"elasticsearch"
+    }
+  },
+  "sort":[
+    {
+      "title.keyword":{
+        "order": "desc"
+      }
+  },
+  {
+    "_score":{
+      "order":"desc"
+    }
+  }
+  ]
+}
+
+
+#mixing it with the _source
+GET /blogposts/_search
+{
+  "query": {
+    "match":{
+      "title":"elasticsearch"
+    }
+  },
+  "sort":[
+    {
+      "title.keyword":{
+        "order": "desc"
+      }
+    },
+    {
+      "_score":{
+        "order":"desc"
+      }
+    }
+  ],
+  "_source":{
+    "include":["title","content"]
+  }
+}
+
+#mixing it with the from and size to define the skip and limit
+#mixing it with the _source
+GET /blogposts/_search
+{
+  "from":1,
+  "size":3,
+  "query": {
+    "match":{
+      "title":"elasticsearch"
+    }
+  },
+  "sort":[
+    {
+      "title.keyword":{
+        "order": "desc"
+      }
+    },
+    {
+      "_score":{
+        "order":"desc"
+      }
+    }
+  ],
+  "_source":{
+    "include":["title","content"]
+  }
+}

@@ -1,0 +1,80 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#here using the maytch_phrase command
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase":{
+      "title":"introduction to elasticsearch"
+    }
+  }
+}
+
+#here the match_phrase query not able to find anything as the intoduction is 0 and elasticsearch is 1
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase":{
+      "title":"introduction elasticsearch"
+    }
+  }
+}
+#using the match_phrase with the slop
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase":{
+      "title":{
+        "query":"introduction elasticsearch",
+        "slop":2
+      }
+    }
+  }
+
+}
+
+
+#using the prefix as the query here the score as 1.0
+GET /blogposts/_search
+{
+  "query":{
+    "prefix":{
+      "title":"elastic"
+      }
+    }
+}
+#using the prefix as the filter condition, here the score is 0.0
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "filter":{
+        "prefix":{
+          "title":"elastic"
+        }
+      }
+    }
+  }
+}
+
+#using the wildcard
+GET /blogposts/_search
+{
+  "query":{
+    "wildcard":{
+      "title":"ki*a"
+    }
+  }
+}
+
+
+#analysing using the _analyze endpoint
+POST /blogposts/_analyze
+{
+  "analyzer":"standard",
+  "text":"intoduction to elasticsearch"
+
+}

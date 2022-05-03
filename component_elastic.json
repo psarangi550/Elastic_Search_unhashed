@@ -1,0 +1,21 @@
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+      {
+        "match":{
+          "title":"learn"
+        }
+      },
+      {
+        "range": {
+           "no_of_like": {
+            "gt": 20
+           }
+        },
+      }
+      ],
+    }
+  }
+}

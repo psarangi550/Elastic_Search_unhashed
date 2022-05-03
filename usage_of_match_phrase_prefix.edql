@@ -1,0 +1,45 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+
+#this query can be used for the suggestion
+#here the term introduction behave as the match_phrase
+#but the elast act as an prefix query
+
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase_prefix":{
+      "title":{
+        "query":"introduction elastic",
+        "slop":2
+      }
+    }
+  }
+}
+
+#fetching all the document as
+GET /blogposts/_search
+{
+  "query":{
+    "match_all":{}
+  }
+}
+
+#this query can be used for the suggestion
+#here the term introduction behave as the match_phrase
+#but the elast act as an prefix query
+#here we can use theslop for the match_phrase query as below
+GET /blogposts/_search
+{
+  "query":{
+    "match_phrase_prefix":{
+      "title":{
+        "query":"Angular Tools for Hi",
+        "slop":2
+      }
+    }
+  }
+}

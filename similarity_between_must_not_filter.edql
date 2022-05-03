@@ -1,0 +1,45 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#here like filter the mustnot also does provide with the _score value
+#only the match will work with the _score relevance value
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "must_not":[
+      {
+        "term":{
+          "title":"elasticsearch"
+        }
+      }
+      ]
+    }
+  }
+}
+
+
+#here we can use both the filter and must not and check that _score will not be used
+GET /blogposts/_search
+{
+  "query":{
+    "bool":{
+      "must_not":[
+        {
+          "term":{
+            "title":"elasticsearch"
+          }
+        }
+      ],
+      "filter":[
+      {
+        "term":{
+          "status":"published"
+        }
+      }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1 @@
+curl -XGET "https://elasticcluster-7057601656.us-east-1.bonsaisearch.net:443/blogpost/_search" -H 'Content-Type: application/json' -d'{  "query": {        "multi_match": {      "query": "kafka",      "fields": ["title","author"]    }      }}'

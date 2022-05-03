@@ -1,0 +1,62 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#Username "gmuk8a4rkt"
+#Password "7g6yr22bfl"
+
+#remeber that _source must be used outside the query not in the match
+
+#fetching all the fields
+GET /blogposts/_search
+{
+  "query":{
+      "match":{
+        "title":"elasticsearch"
+      }
+  }
+}
+
+#fetching only the title and content field
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title": {
+        "query":"elasticsearch",
+        "analyzer":"standard"
+      }
+    }
+  },
+  "_source":{
+    "include":["title","content"]
+  }
+}
+
+#fetchign the value using the exclude field
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title": {
+        "query":"elasticsearch",
+        "analyzer":"standard"
+      }
+    }
+  },
+  "_source":{
+    "exclude":"title"
+  }
+}
+
+#fetching the value directly using the _source field
+GET /blogposts/_search
+{
+  "query":{
+    "match":{
+      "title": {
+        "query":"elasticsearch",
+        "analyzer":"standard"
+      }
+    }
+  },
+  "_source":["title","content"]
+}

@@ -1,0 +1,173 @@
+GET eshop/_mapping
+#getting the index details
+GET /blogpost
+
+#getting the mapping details
+GET /blogpost/_mapping
+
+
+#changing the replica shard
+PUT /blogpost/_settings
+{
+  "number_of_replicas": 1
+}
+
+#getting error dude default mapping of document of index
+POST /blogpost/_update/1
+{
+  "doc":{
+    "no_of_like":"ten"
+  }
+}
+
+#fetching the document
+GET /blogpost/_doc/1
+
+#fetching all the document in the index
+GET /blogpost/_search
+{
+  "query":
+  {
+    "match_all": {}
+  }
+}
+
+#sorting value
+GET /blogpost/_search
+{
+  "sort":[
+    {
+      "author.keyword":{
+        "order":"asc"
+      }
+    }
+  ]
+}
+
+#filtering
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term":
+          {
+            "author.keyword": "pratik"
+          }
+        }
+      ]
+    }
+  }
+}
+
+#filtering or matching
+
+GET /blogpost/_search
+{
+  "query": {
+    "match": {
+      "author.keyword": "pratik"
+    }
+  }
+}
+
+
+#again writing the sort
+GET /blogpost/_search
+{
+  "sort": [
+    {
+      "author.keyword": {
+        "order": "asc"
+      }
+    }
+  ]
+}
+
+
+#creating the index with number_of_shards and number_of_replicas
+
+PUT /eshop
+{
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 3
+  }
+}
+
+
+#we can able to change the replica shard
+
+PUT /eshop/_settings
+{
+  "number_of_replicas": 1
+}
+
+
+#getting the mapping for the eshop index
+GET eshop/_mapping
+
+#getting the first doc
+GET /eshop/_doc/1
+
+#getting the 2nd doc
+GET /eshop/_doc/2
+
+#getting the 3rd doc
+GET /eshop/_doc/3
+
+
+GET /enewshop
+
+
+#here using the type as keyword which will ignore the analysis
+PUT /eshop/_mapping
+{
+  "properties":{
+    "comment":{"type":"keyword"}
+  }
+}
+
+#getting all the mapping details
+GET /eshop/_mapping
+
+
+#indexing the documents with comments field
+
+PUT eshop/_doc/1
+{
+  "title":"learn kafak immediately",
+  "description":"Apache Kafka is a distributed event store and stream-processing platform",
+  "published_on":"2022-04-28",
+  "tags":["kafka","apache"],
+  "no_of_like":20,
+  "status":"published",
+  "comment":"hello there"
+}
+
+#this will not be displayed as the analysis is not happening
+
+GET /eshop/_search
+{
+  "query": {
+    "match": {
+      "comment": "hello there"
+    }
+  }
+}
+
+
+#now we can also use the query as below , here in this case as we selected the entire thing hence will be displayed
+
+GET /eshop/_search
+{
+  "query": {
+    "match": {
+      "comment": "hello there"
+    }
+  }
+}
+
+
+GET /enewshop

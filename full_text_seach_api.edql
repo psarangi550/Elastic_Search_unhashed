@@ -1,0 +1,191 @@
+GET /blogpost/_search
+{
+  "query": {
+    
+    "multi_match": {
+      "query": "kafka",
+      "fields": ["title","author"]
+    }
+    
+  }
+}
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": 
+          {
+            "title": "Apache Air Flow"
+          }
+        }
+      ],
+      "must_no": [
+        {
+          "match": {
+            "author": "Rohith"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": 
+          {
+            "title": "Apache Air Flow"
+          }
+        },
+        {
+          "match": {
+            "author": "pratik"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+#updating the Rohith record 
+
+POST /blogpost/_update/4
+{
+  "doc":{
+    "status":"draft"
+  }
+}
+
+
+GET /blogpost/_doc/4
+
+
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "title": "Apache Air Flow"
+          }
+        },
+        {
+          "match": {
+            "status": "draft"
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "title": "Apache Air Flow"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "status": "draft"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "match_phrase": {
+            "title": "Apache Air Flow"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "match_phrase": {
+            "title": "Apache Air Flow"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+GET /blogpost/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": 
+          {
+            "title": "Apache Air Flow"
+          }
+        }
+      ]
+      , "filter": [
+        {
+          "range": {
+            "no_of_like": {
+              "lte": 10
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

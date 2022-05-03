@@ -1,0 +1,37 @@
+HOST https://gmuk8a4rkt:7g6yr22bfl@elasticcluster-7057601656.us-east-1.bonsaisearch.net:443
+Timeout 3000
+#removing the index custblog
+DELETE /custblog
+
+#now here we need to use the edge_ngram for the index
+PUT /custblog
+{
+  "settings":{
+    "number_of_shards":1,
+    "number_of_replicas":1,
+    "analysis":{
+      "analyzer":{
+        "custom_edge_analyzer":{
+          "type":"custom",
+          "tokenizer":"my_edge_n_tokenizer"
+        }
+
+      }  ,
+      "tokenizer":{
+        "my_edge_n_tokenizer":{
+          "type":"edge_ngram",
+          "min_gram":2,
+          "max_gram":6
+        }
+      }
+    }
+  }
+}
+
+
+#testing the tokenizer
+POST /custblog/_analyze
+{
+  "analyzer":"custom_edge_analyzer",
+  "text":"search"
+}
