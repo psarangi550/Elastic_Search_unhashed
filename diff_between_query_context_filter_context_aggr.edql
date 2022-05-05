@@ -1,0 +1,13 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+Authorization "Bear xxx"
+
+POST my-index/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+      ]
+    }
+  }
+}
