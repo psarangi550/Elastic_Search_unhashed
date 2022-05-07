@@ -1,0 +1,37 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+#Authorization "Bear xxx"
+Username "elastic"
+Password "pratik123"
+
+#here using the "index_options":"docs" while mapping which will only use IDF for fetching relevance the TF value
+#using the analyzer as "simple analyzer"
+PUT /procblog
+{
+  "settings":
+  {
+    "number_of_shards":1,
+    "number_of_replicas":1,
+    "analysis":{
+      "analyzer":{
+        "my_custom_analyzer":{
+          "type":"simple"
+        }
+      }
+    }
+  },
+  "mappings":{
+    "properties":{
+      "name":{
+        "type" : "text",
+        "fields":{
+          "keyword":{
+            "type":"keyword"
+          }
+        },
+        "analyzer" : "my_custom_analyzer",
+        "index_options":"docs"
+      }
+    }
+  }
+}

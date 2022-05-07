@@ -1,0 +1,69 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+Username "elastic"
+Password "pratik123"
+#matching all the document in the index
+GET /courses/_search
+    {
+        "query": {
+            "match_all": {}
+        }
+}
+#using the and operator with match condition
+GET /courses/_search
+{
+    "query": {
+        "match": {
+            "name" :{
+                "query": "Accounting info",
+                "operator": "and"
+            }
+        }
+    }
+}
+#using the filter query in here
+GET /courses/_search
+{
+    "query": {
+        "bool":{
+            "filter": {
+                "match": {
+                    "name":{
+                        "query": "computer"
+                    }
+                }
+            }
+        }
+    }
+}
+
+#using the booster in this case for all fields in the multi_match
+GET /courses/_search
+{
+    "query": {
+        "multi_match":{
+            "query": "accounting",
+            "fields": ["name","professor.department"],
+            "boost": 2
+        }
+
+    }
+
+}
+
+#if i have to use boost for a particular field then
+GET /courses/_search
+{
+    "query": {
+        "multi_match":{
+            "query": "accounting",
+            "fields": ["name","professor.department"]
+        },
+        "boost": {
+            "name":{
+                "value" :2
+            }
+        }
+    }
+
+}

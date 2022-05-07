@@ -1,13 +1,11 @@
 HOST http://127.0.0.1:9200
 Timeout 3000
-Authorization "Bear xxx"
+Username "elastic"
+Password "pratik123"
 
-POST my-index/_search
+GET /blogposts/_search
 {
   "query": {
-    "bool": {
-      "must": [
-      ]
-    }
+    "match_all":{}
   }
 }

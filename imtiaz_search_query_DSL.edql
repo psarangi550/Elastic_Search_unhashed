@@ -1,0 +1,64 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+Username "elastic"
+Password "pratik123"
+
+#getting the mapping for the field
+GET /courses/_mapping
+
+#using the multi_match to match multiple field
+GET /courses/_search
+{
+  "query":{
+    "multi_match":{
+      "query":"accounting",
+      "fields":["professor.department","name"]
+    }
+  }
+}
+
+#using the match_phrase with the query condition
+GET /courses/_search
+{
+  "query":{
+    "match_phrase":{
+      "name":{
+        "query":"accounting Systems",
+        "slop":1
+      }
+    }
+  }
+}
+
+#using the match_prefix with slop in the query
+GET /courses/_search
+{
+  "query":{
+    "match_phrase_prefix":{
+      "name":{
+        "query":"accounting Sy",
+        "slop":1
+      }
+    }
+  }
+}
+
+#using the prefix  in the query
+GET /courses/_search
+{
+  "query":{
+    "prefix":{
+      "name":"acc"
+      }
+  }
+}
+
+#using the wildcard in the query
+GET /courses/_search
+{
+  "query":{
+    "wildcard":{
+      "name":"*cc*g"
+    }
+  }
+}

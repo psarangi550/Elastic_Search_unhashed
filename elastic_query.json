@@ -1,0 +1,17 @@
+{
+	"query":{
+
+		"match_all" : {}
+	}
+}
+
+
+{
+	"aggs":{
+		"total_aggr":{
+			"terms":{
+				"field":"title.keyword"
+			}
+		}
+	}
+}
