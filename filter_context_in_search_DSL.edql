@@ -1,0 +1,125 @@
+HOST http://127.0.0.1:9200
+Timeout 3000
+Username "elastic"
+Password "pratik123"
+
+#here using the match_all query to summize the effect
+GET /courses/_search
+{
+  "query":{
+    "match_all":{}
+  }
+}
+
+#here using the filter query to check score effect
+GET /courses/_search
+{
+  "query":{
+    "bool":{
+      "filter":{
+          "bool":{
+            "must":[{
+              "match":{
+                "name":"Accounting"
+              }
+            },
+              {
+                "match":{
+                  "professor.name":{
+                    "query":"Bill"
+                  }
+                }
+              }
+            ],
+            "must_not":[
+            {
+              "match":{
+                "room":"e7"
+              }
+            }
+            ]
+          }
+      }
+    }
+  }
+}
+
+
+#we can also use the query and filter contect together as below
+GET /courses/_search
+{
+  "query":{
+    "bool":{
+      "filter":{
+        "bool":{
+          "must":[{
+           "range":{
+              "students_enrolled":{
+                "gte":12
+              }
+           }
+          }],
+          "must_not":[]
+        }
+      },
+      "should":[
+        {
+          "match":{
+            "room":"e3"
+          }
+        },
+      {
+        "range":{
+        "students_enrolled":{
+          "gte":12,
+          "lte":14
+        }
+        }
+      }
+
+      ]
+    }
+  }
+}
+
+#we can also use the boost along with the query and filter context both combined as well
+GET /courses/_search
+{
+  "query":{
+    "bool":{
+      "filter":{
+        "bool": {
+          "must":[{
+           "range":{
+          "students_enrolled":{
+            "gte":12
+            }
+           }
+          }]
+        }
+      },
+      "should":[
+      {
+      "match":{
+        "room":"e3"
+      }
+      },
+      {
+        "range":{
+        "students_enrolled":{
+          "gte":12,
+          "lte":14
+        }
+        }
+      },
+      {
+        "multi_match":{
+          "query":"market",
+          "fields":["name","course_description^2"]
+          #here using the boost value with ^ symbol
+        }
+      }
+      ]
+    }
+  }
+}

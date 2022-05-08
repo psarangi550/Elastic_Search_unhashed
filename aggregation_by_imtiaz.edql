@@ -1,0 +1,267 @@
+HOST http://127.0.0.1:9200
+#Timeout 3000
+#Authorization "Bear xxx"
+Username "elastic"
+Password "pratik123"
+
+#using the bulk API to index multiple document to the index
+POST /vehicles/cars/_bulk
+{ "index": {}}
+{ "price" : 10000, "color" : "white", "make" : "honda", "sold" : "2016-10-28", "condition": "okay"}
+{ "index": {}}
+{ "price" : 20000, "color" : "white", "make" : "honda", "sold" : "2016-11-05", "condition": "new" }
+{ "index": {}}
+{ "price" : 30000, "color" : "green", "make" : "ford", "sold" : "2016-05-18", "condition": "new" }
+{ "index": {}}
+{ "price" : 15000, "color" : "blue", "make" : "toyota", "sold" : "2016-07-02", "condition": "good" }
+{ "index": {}}
+{ "price" : 12000, "color" : "green", "make" : "toyota", "sold" : "2016-08-19" , "condition": "good"}
+{ "index": {}}
+{ "price" : 18000, "color" : "red", "make" : "dodge", "sold" : "2016-11-05", "condition": "good"  }
+{ "index": {}}
+{ "price" : 80000, "color" : "red", "make" : "bmw", "sold" : "2016-01-01", "condition": "new"  }
+{ "index": {}}
+{ "price" : 25000, "color" : "blue", "make" : "ford", "sold" : "2016-08-22", "condition": "new"  }
+{ "index": {}}
+{ "price" : 10000, "color" : "gray", "make" : "dodge", "sold" : "2016-02-12", "condition": "okay" }
+{ "index": {}}
+{ "price" : 19000, "color" : "red", "make" : "dodge", "sold" : "2016-02-12", "condition": "good" }
+{ "index": {}}
+{ "price" : 20000, "color" : "red", "make" : "chevrolet", "sold" : "2016-08-15", "condition": "good" }
+{ "index": {}}
+{ "price" : 13000, "color" : "gray", "make" : "chevrolet", "sold" : "2016-11-20", "condition": "okay" }
+{ "index": {}}
+{ "price" : 12500, "color" : "gray", "make" : "dodge", "sold" : "2016-03-09", "condition": "okay" }
+{ "index": {}}
+{ "price" : 35000, "color" : "red", "make" : "dodge", "sold" : "2016-04-10", "condition": "new" }
+{ "index": {}}
+{ "price" : 28000, "color" : "blue", "make" : "chevrolet", "sold" : "2016-08-15", "condition": "new" }
+{ "index": {}}
+{ "price" : 30000, "color" : "gray", "make" : "bmw", "sold" : "2016-11-20", "condition": "good" }
+
+
+#fetchign all the document insuide the index values
+GET /vehicles/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+#deleting the index
+DELETE /vehicles
+
+#sorting the document by its color
+GET /vehicles/_search
+{
+  "sort":[
+    {
+    "color.keyword" : {
+      "order" : "desc"
+    }
+  }
+  ]
+}
+
+#fetching the popular cars using the aggregation
+GET /vehicles/_search
+{
+  "size":0,
+  "aggs":{
+   "popular_cars":{
+     "terms":{
+       "field": "make.keyword"
+     }
+   }
+  }
+}
+
+#average car selled can be fetched by
+GET /vehicles/_search
+{
+  "size":0,
+  "aggregations":{
+    "cars_aggr":{
+      "terms":{
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_of_cars_aggr": {
+          "avg":{
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+#we can use the _count end point to fetch the count of a document for a query
+GET /vehicles/_count
+{
+  "query":{
+    "match":{
+      "color":{
+        "query":"red"
+      }
+    }
+  }
+}
+#USING THE RANGE TO FIND OUT BASED ON THE PRICE VALUE BUCKET
+GET /vehicles/_search
+{
+  "size":0,
+  "aggs":{
+    "price_val_aggr":{
+      "range":{
+        "field": "price",
+        "ranges":[
+        {
+          "from":8000,
+          "to":20000
+        },
+        {
+          "from":20000
+        }
+        ]
+      }
+    }
+  }
+}
+
+#BUCKET BASED ON DATE DATE_RANGE CAN BE WRITTEN AS
+GET /vehicles/_search
+{
+  "aggs":{
+    "date_range_bucket":{
+      "date_range":{
+        "field": "sold",
+        "ranges": [
+          {
+            "from":"2016-01-01"
+          }
+        ]
+      }
+    }
+  }
+}
+
+#average of the car sol in duration of 01-01-2016 to 08-05-2016 and 08-05-2016 onwards
+GET /vehicles/_search
+{
+  "size":0,
+  "aggs":{
+    "date_range_aggr":{
+      "date_range":{
+        "field": "sold",
+        "ranges":[
+        {
+          "from":"2016-01-01",
+          "to":"2016-08-05"
+        },
+        {
+          "from":"2016-08-05"
+        }
+        ]
+      },
+      "aggs":{
+        "stats_on_date_aggr":{
+          "stats":{
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+
+#here first grouping by thr make field and then
+#average of the car sol in duration of 01-01-2016 to 08-05-2016 and 08-05-2016 onwards
+GET /vehicles/_search
+{
+  "size":0,
+  "aggs":{
+    "car_by_brand_aggr":{
+      "terms":{
+        "field": "make.keyword"
+      },
+      "aggs":{
+        "date_range_aggr":{
+          "date_range":{
+            "field": "sold",
+            "ranges":[
+            {
+              "from":"2016-01-01",
+              "to":"2016-05-08"
+            },
+            {
+              "from":"2016-05-08"
+            }
+            ]
+          },
+          "aggregations":{
+            "stat_aggr":{
+              "stats":{
+                "field":"price"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#based on the condtion trying to find out the average price
+GET /vehicles/_search
+{
+  "aggs":{
+    "condition_aggr":{
+      "terms":{
+        "field":"condtion.keyword"
+      },
+      "aggs":{
+        "average_price":{
+          "avg":{
+            "field":"price"
+          }
+        }
+      }
+    }
+
+  }
+}
+
+#based on condition first group by
+#then find the average price on that
+#then devide that by grouping  the make
+#calculate the min and max on that
+
+GET /vehicles/_search
+{
+  "aggs":{
+    "aggr_by_condition":{
+      "terms":{
+        "field": "condition.keyword"
+      },
+      "aggs":{
+        "average_price":{
+          "avg":{
+            "field": "price"
+          }
+        },
+          "car_maker_aggr": {
+            "terms":{
+              "field": "make.keyword"
+            },
+            "aggs":{
+              "stats_of_make":{
+                "stats":{
+                  "field":"price"
+                }
+              }
+            }
+          }
+      }
+    }
+  }
+}

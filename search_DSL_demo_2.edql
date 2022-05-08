@@ -51,18 +51,43 @@ GET /courses/_search
 
 }
 
+#here if we want to boost the particular field while querying
+GET /courses/_search
+{
+    "query":{
+        "bool":{
+            "should":[
+            {
+                "match":{
+                    "name":{
+                        "query": "computer"
+
+                    }
+                }
+            },
+            {
+                "match":{
+                    "professor.department":{
+                        "query": "computer",
+                        "boost":2
+                    }
+                }
+            }
+            ]
+        }
+    }
+}
+
+
+
 #if i have to use boost for a particular field then
+#here the ^ symbol spectify which field has more boost6 value
 GET /courses/_search
 {
     "query": {
         "multi_match":{
             "query": "accounting",
-            "fields": ["name","professor.department"]
-        },
-        "boost": {
-            "name":{
-                "value" :2
-            }
+            "fields": ["name^2","professor.department"]
         }
     }
 

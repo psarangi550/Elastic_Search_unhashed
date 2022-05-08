@@ -6,6 +6,8 @@ Password "pratik123"
 
 #here using the "index_options":"docs" while mapping which will only use IDF for fetching relevance the TF value
 #using the analyzer as "simple analyzer"
+
+#here we are not using any boost value
 PUT /procblog
 {
   "settings":
@@ -31,6 +33,42 @@ PUT /procblog
         },
         "analyzer" : "my_custom_analyzer",
         "index_options":"docs"
+      }
+    }
+  }
+}
+
+
+#removing the index so that we can reindex it with bootst value
+DELETE /procblog
+
+#reindexing it with boost value for the name field in the mapping
+PUT /procblog
+{
+  "settings":
+  {
+    "number_of_shards":1,
+    "number_of_replicas":1,
+    "analysis":{
+      "analyzer":{
+        "my_custom_analyzer":{
+          "type":"simple"
+        }
+      }
+    }
+  },
+  "mappings":{
+    "properties":{
+      "name":{
+        "type" : "text",
+        "fields":{
+          "keyword":{
+            "type":"keyword"
+          }
+        },
+        "analyzer" : "my_custom_analyzer",
+        "index_options":"docs",
+        "boost":2
       }
     }
   }
